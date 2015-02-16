@@ -17,5 +17,12 @@
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
     </div>
+    <div id="form">
+        <form>
+            Write your message here:
+            <input type="text" name="message" class="message">
+            <input type="submit" value="Submit" onclick="setMessage($('.message'))">
+        </form>
+    </div>
   </body>
 </html>
