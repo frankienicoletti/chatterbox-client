@@ -97,3 +97,6 @@ form input[type=text] {
     margin-left: 20px;
 }
 
+.roomButton {
+    padding: 5px;
+}
