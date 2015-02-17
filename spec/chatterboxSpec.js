@@ -61,6 +61,7 @@ describe('chatterbox', function() {
         app.fetch();
         expect($.ajax.calledOnce).to.be.true;
         ajaxUrl = typeof $.ajax.args[0][0] === 'string' ? $.ajax.args[0][0] : $.ajax.args[0][0].url;
+        console.log(ajaxUrl)
         expect(ajaxUrl).to.equal(app.server);
         done();
       });

@@ -1,52 +1,57 @@
 // // YOUR CODE HERE:
+var app = {
+  init: function(){
 
-var message = {
-  'username': 'shawndrost',
-  'text': 'trololo',
-  'roomname': '4chan'
+  },
+  server: "https://api.parse.com/1/classes/chatterbox",
+  send: function(message){
+    $.ajax({
+      // always use this url
+      url: this.server,
+      type: 'POST',
+      data: JSON.stringify(message),
+      contentType: 'application/json',
+      success: function (data) {
+        console.log('chatterbox: Message sent');
+      },
+      error: function (data) {
+        // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        console.error('chatterbox: Failed to send message');
+      }
+    });
+  },
+  fetch: function() {
+    $.ajax({
+      // always use this url
+      url: this.server,
+      type: 'GET',
+      contentType: 'application/json',
+      data: "order=-createdAt",
+      success: function (data) {
+        console.log('chatterbox: Message received');
+        readMessages(data);
+      },
+      error: function (data) {
+        // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
+        console.error('chatterbox: Failed to get message');
+      }
+    });
+  },
+  clearMessages: function() {
+
+  }
 };
 
-function sendMessage(){
-  // HAS NOT BEEN COMPLETED YET
-  // $.ajax({
-  //   // always use this url
-  //   url: 'https://api.parse.com/1/classes/chatterbox',
-  //   type: 'POST',
-  //   data: JSON.stringify(message),
-  //   contentType: 'application/json',
-  //   success: function (data) {
-  //     console.log('chatterbox: Message sent');
-  //   },
-  //   error: function (data) {
-  //     // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-  //     console.error('chatterbox: Failed to send message');
-  //   }
-  // });
-}
+// var message = {
+//   'username': getUserName(document.URL),
+//   'text': text,
+//   'roomname': roomname
+// };
 
-
-function getMessages(){
-  $.ajax({
-  // always use this url
-  url: 'https://api.parse.com/1/classes/chatterbox',
-  type: 'GET',
-  contentType: 'application/json',
-  where: {'updatedAt': {'$gte':"2014-12-29T23:07:38.153Z"}},
-  //where: {'updatedAt': {'$gte':"2014-12-29T23:07:38.153Z"}},
-  success: function (data) {
-    console.log('chatterbox: Message received');
-    readMessages(data);
-  },
-  error: function (data) {
-    // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
-    console.error('chatterbox: Failed to get message');
-  }
-  });
-}
 
 function readMessages(messageObj){
   var messages = messageObj['results'];
-  for (var i = 0; i < 100; i++){
+  for (var i = 0; i < messages.length ; i++){
     var msgBox = $().add("<span>").addClass("message");
     msgBox.append($().add("<span>").addClass("user").text(messages[i]['username']));
     msgBox.append($().add("<span>").addClass("time").text(messages[i]['updatedAt']));
@@ -58,12 +63,17 @@ function readMessages(messageObj){
 
 
 var setMessage = function(message) {
-  console.log(message.val());
+  console.log(document.URL,123);
 };
 
 $(document).ready(function() {
-  $("body").append("<div class='messages'></div>");
-  getMessages();
+  $("body").append("<div class='messages' id='chats'></div>");
+  app.fetch();
 });
+
+function getUserName(URL){
+  var start = URL.search("username") + 9;
+  return URL.slice(start);
+};
 
 
