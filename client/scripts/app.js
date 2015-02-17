@@ -6,7 +6,6 @@ var app = {
   server: "https://api.parse.com/1/classes/chatterbox",
   send: function(message){
     $.ajax({
-      // always use this url
       url: this.server,
       type: 'POST',
       data: JSON.stringify(message),
@@ -15,7 +14,6 @@ var app = {
         console.log('chatterbox: Message sent');
       },
       error: function (data) {
-        // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
         console.error('chatterbox: Failed to send message');
       }
     });
@@ -38,7 +36,8 @@ var app = {
     });
   },
   clearMessages: function() {
-
+    $(".messages").html("");
+    console.log(document.body);
   }
 };
 
