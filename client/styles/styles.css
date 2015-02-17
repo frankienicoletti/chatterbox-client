@@ -65,11 +65,11 @@ form input[type=text] {
     background-color: #eee;
 }
 
-.chat .username {
+.messages{
     font-weight: 800;
 }
 
-.chat:hover {
+.messages {
     background-color: #ddd;
 }
 
@@ -82,3 +82,18 @@ form input[type=text] {
 .spinner img {
     padding: 10px;
 }
+
+.user {
+    float: left;
+
+}
+
+.msgText {
+    float: right;
+}
+
+.time{
+    float: left;
+    margin-left: 20px;
+}
+

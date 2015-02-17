@@ -31,6 +31,8 @@ function getMessages(){
   url: 'https://api.parse.com/1/classes/chatterbox',
   type: 'GET',
   contentType: 'application/json',
+  where: {'updatedAt': {'$gte':"2014-12-29T23:07:38.153Z"}},
+  //where: {'updatedAt': {'$gte':"2014-12-29T23:07:38.153Z"}},
   success: function (data) {
     console.log('chatterbox: Message received');
     readMessages(data);
@@ -45,12 +47,13 @@ function getMessages(){
 function readMessages(messageObj){
   var messages = messageObj['results'];
   for (var i = 0; i < 100; i++){
-    console.log(i, messages[i]['text']);
-    var msg = $().add("<span>").addClass("message").text(messages[i]['text']).add("<br>");
-    // "User: ",messages[i]['username'],"   Message: ",messages[i]['text'],"   Room: ",messages[i]['room']);
-    $(".messages").append(msg);
+    var msgBox = $().add("<span>").addClass("message");
+    msgBox.append($().add("<span>").addClass("user").text(messages[i]['username']));
+    msgBox.append($().add("<span>").addClass("time").text(messages[i]['updatedAt']));
+    msgBox.append($().add("<span>").addClass("msgText").text(messages[i]['text']));
+    msgBox.append("<br>");
+    $(".messages").append(msgBox);
   }
-  //$("body").append("<div>HELLO</div>").addClass("messages");
 }
 
 
