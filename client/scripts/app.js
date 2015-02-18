@@ -4,6 +4,8 @@ var app = {
 
   server: "https://api.parse.com/1/classes/chatterbox",
 
+  friends: {},
+
   init: function(){
     $('body').append('<div class="rooms" id="roomSelect"></div>');
     $('body').append('<div class="messages" id="chats"></div>');
@@ -46,7 +48,7 @@ var app = {
   },
 
   clearMessages: function() {
-    $(".messages").html("");
+    $(".messages").empty();
   },
 
   addMessage: function(message){
@@ -54,13 +56,26 @@ var app = {
       message['updatedAt'] = new Date().toISOString();
     }
     if (!message['roomname']) {
-      message['roomname'] = 'main1';
+      message['roomname'] = 'lobby';
     }
     message['roomname'] = _.escape(message['roomname']);
-    this.addRoom(message['roomname']);
-    this.rooms[message['roomname']].push(message);
+    if (!this.rooms[message['roomname']]){
+      this.addRoom(message['roomname']);
+    }
+    if (this.rooms[message['roomname']].indexOf(message) === -1) {
+      this.rooms[message['roomname']].push(message);
+    }
     var msgBox =  $().add("<span>").addClass("message");
-    msgBox.append($().add("<span>").addClass("user").text(message['username']));
+    if (message['username'] in this.friends){
+      msgBox.addClass("friend");
+    }
+    var user = $().add("<span>").addClass("user").text(message['username']);
+    var context = this;
+    user.on('click',function(){
+      context.friends[message['username']] = true;
+      $(".message:contains('"+message['username']+"')").addClass("friend");
+    });
+    msgBox.append(user);
     msgBox.append($().add("<span>").addClass("time").text(message['updatedAt']));
     msgBox.append($().add("<span>").addClass("msgText").text(message['text']));
     msgBox.append("<br>");
@@ -73,6 +88,15 @@ var app = {
       this.addMessage(messages[i]);
     }
   },
+  readMessages1: function(messageObj){
+    var messages = messageObj['results'];
+    console.dir(messages);
+    console.log(messages.length);
+    this.addMessage(messages[0]);
+    for (var i = 0; i < messages.length ; i++){
+      this.addMessage(messages[i]);
+    }
+  },
 
   getUserName: function(URL) {
     var start = URL.search("username") + 9;
@@ -80,16 +104,21 @@ var app = {
   },
 
   addRoom: function(roomname) {
-    console.log(123,roomname);
+    var context = this;
     if (!this.rooms[roomname]) {
       this.rooms[roomname] = [];
-      var roomBox = $("#roomSelect")
+      var roomBox = $("#roomSelect");
       var room = $().add("<span>").addClass("roomButton").attr('id',roomname).text(roomname);
       roomBox.append(room);
-      room.on('click',function(room){console.log(room)});
+      room.on('click',function(room){
+        var array = context.rooms[roomname];
+        context.clearMessages();
+        context.readMessages1({'results':array});
+      });
     }
   }
 };
+
 
 $(document).ready(function() {
   app.init();
