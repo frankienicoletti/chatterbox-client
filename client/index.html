@@ -8,6 +8,7 @@
     <!-- dependencies -->
     <script src="bower_components/jquery/jquery.min.js"></script>
     <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="scripts/app.js"></script>
@@ -24,5 +25,13 @@
             <input type="submit" value="Submit" onclick="sendMessage($('.message'))">
         </form>
     </div>
+    <script>
+    $(function(){
+      var messages = new Messages();
+      messages.loadMsgs();
+      var messagesView = new MessagesView({model:messages});
+      messagesView.render();
+    })
+    </script>
   </body>
 </html>
